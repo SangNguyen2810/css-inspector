@@ -1,5 +1,8 @@
 import { camelToKebab } from '@/utils/camelToKebab';
-import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { kebabToCamel } from '@/utils/kebabToCamel';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import CssPropInputEdit from './CssPropInputEdit';
+import CssPropInputDisplay from './CssPropInputDisplay';
 
 interface CssPropInputProps {
   prop: string;
@@ -7,65 +10,17 @@ interface CssPropInputProps {
   onCommit: (newProp: string) => void;
 }
 
-const CssPropInputDisplay: React.FC<{
-  prop: string;
-  editable?: boolean;
-  onEdit: () => void;
-}> = ({ prop, editable, onEdit }) => {
-  const pureCssProperty = useMemo(() => {
+export const CssPropInput: React.FC<CssPropInputProps> = ({ prop, editable, onCommit }) => {
+  const [localProp, setLocalProp] = useState(() => {
     if (prop.startsWith('--')) return prop;
     return camelToKebab(prop);
-  }, [prop]);
-  const handleEdit = useCallback(() => {
-    if (editable) onEdit();
-  }, [editable, onEdit]);
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLSpanElement>) => {
-      if (editable && (e.key === 'Enter' || e.key === ' ')) onEdit();
-    },
-    [editable, onEdit],
-  );
-  return (
-    <span
-      className={'text-blue-700 flex-1 pointer'}
-      tabIndex={0}
-      onClick={editable ? handleEdit : undefined}
-      onKeyDown={handleKeyDown}
-    >
-      {pureCssProperty}
-    </span>
-  );
-};
-
-const MemoizedCssPropInputDisplay = React.memo(CssPropInputDisplay);
-
-const CssPropInputEdit: React.FC<{
-  localProp: string;
-  setLocalProp: (v: string) => void;
-  inputRef: React.RefObject<HTMLInputElement | null>;
-  handleBlur: () => void;
-  handleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
-}> = ({ localProp, setLocalProp, inputRef, handleBlur, handleKeyDown }) => (
-  <input
-    ref={inputRef}
-    className="text-blue-700 flex-1"
-    value={localProp}
-    spellCheck={false}
-    onChange={(e) => setLocalProp(e.target.value)}
-    onBlur={handleBlur}
-    onKeyDown={handleKeyDown}
-  />
-);
-
-const MemoizedCssPropInputEdit = React.memo(CssPropInputEdit);
-
-export const CssPropInput: React.FC<CssPropInputProps> = ({ prop, editable, onCommit }) => {
-  const [localProp, setLocalProp] = useState(prop);
+  });
   const [isEditing, setIsEditing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setLocalProp(prop);
+    if (prop.startsWith('--')) setLocalProp(prop);
+    else setLocalProp(camelToKebab(prop));
   }, [prop]);
 
   useEffect(() => {
@@ -76,8 +31,9 @@ export const CssPropInput: React.FC<CssPropInputProps> = ({ prop, editable, onCo
 
   const handleBlur = useCallback(() => {
     setIsEditing(false);
-    if (localProp !== prop) {
-      onCommit(localProp);
+    if (localProp !== (prop.startsWith('--') ? prop : camelToKebab(prop))) {
+      if (localProp.startsWith('--')) onCommit(localProp);
+      else onCommit(kebabToCamel(localProp));
     }
   }, [localProp, prop, onCommit]);
 
@@ -90,11 +46,11 @@ export const CssPropInput: React.FC<CssPropInputProps> = ({ prop, editable, onCo
   const handleEdit = useCallback(() => setIsEditing(true), []);
 
   if (!editable) {
-    return <MemoizedCssPropInputDisplay prop={prop} editable={false} onEdit={() => {}} />;
+    return <CssPropInputDisplay prop={prop} editable={false} onEdit={() => {}} />;
   }
 
   return isEditing ? (
-    <MemoizedCssPropInputEdit
+    <CssPropInputEdit
       localProp={localProp}
       setLocalProp={setLocalProp}
       inputRef={inputRef}
@@ -102,7 +58,7 @@ export const CssPropInput: React.FC<CssPropInputProps> = ({ prop, editable, onCo
       handleKeyDown={handleKeyDown}
     />
   ) : (
-    <MemoizedCssPropInputDisplay prop={prop} editable={editable} onEdit={handleEdit} />
+    <CssPropInputDisplay prop={prop} editable={editable} onEdit={handleEdit} />
   );
 };
 
