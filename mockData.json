@@ -1,0 +1,76 @@
+{
+  "globalCss": {
+    ".redBox": { "border": "2px solid red", "backgroundColor": "#ffeaea" },
+    "#mainBox": { "boxShadow": "0 0 8px #0070f3" }
+  },
+  "nodes": [
+    {
+      "id": "root",
+      "type": "Div",
+      "name": "Container",
+      "x": 30,
+      "y": 30,
+      "width": 500,
+      "height": 800,
+      "classNames": ["redBox"],
+      "ids": ["mainBox"],
+      "styles": { "backgroundColor": "#f3f3f3" },
+      "children": [
+        {
+          "id": "div-1",
+          "type": "Div",
+          "name": "Sample Div",
+          "x": 50,
+          "y": 50,
+          "width": 120,
+          "height": 60,
+          "classNames": [],
+          "ids": [],
+          "styles": { "backgroundColor": "#e0e0e0" },
+          "children": []
+        },
+        {
+          "id": "img-1",
+          "type": "Image",
+          "name": "Sample Image",
+          "x": 50,
+          "y": 100,
+          "width": 100,
+          "height": 60,
+          "classNames": [],
+          "ids": [],
+          "styles": {},
+          "value": "/dog.jpeg",
+          "children": []
+        },
+        {
+          "id": "input-1",
+          "type": "Input",
+          "name": "Sample Input",
+          "x": 50,
+          "y": 200,
+          "width": 140,
+          "height": 40,
+          "classNames": [],
+          "ids": [],
+          "styles": {},
+          "value": "Hello, world!",
+          "children": []
+        },
+        {
+          "id": "btn-1",
+          "type": "Button",
+          "name": "Click Me",
+          "x": 50,
+          "y": 300,
+          "width": 100,
+          "height": 40,
+          "classNames": [],
+          "ids": [],
+          "styles": { "backgroundColor": "#0070f3", "color": "#fff" },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

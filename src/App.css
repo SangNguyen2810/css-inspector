@@ -1,0 +1,9 @@
+
+
+html {
+  font-family: 'Red Hat Text', system-ui, sans-serif;
+}
+
+body {
+  @apply !bg-[#FCF8F5];
+}
