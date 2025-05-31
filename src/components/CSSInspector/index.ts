@@ -1,3 +1,3 @@
-import { CSSInspector } from './CSSInspector';
+import CSSInspector from './CSSInspector';
 
 export default CSSInspector;
